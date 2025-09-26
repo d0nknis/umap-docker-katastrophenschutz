@@ -1,0 +1,8 @@
+UMAP_PICTOGRAMS_COLLECTIONS = {
+    "kats": {"path": "/srv/umap/kats/", "attribution": "Taktische-und Einsatzsymbole"},
+}
+UMAP_HOST_INFOS = {
+    "name": "THW OV",
+    "url": "https://www.thw.de/",
+    "contact": "changeme@example.de"
+}

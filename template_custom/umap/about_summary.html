@@ -1,0 +1,72 @@
+{% load i18n static %}
+
+<div class="wrapper about_summary  highlights">
+  <div class="row">
+    <div class="col quarter mwide">
+      <img class="colophon"
+           src="{% static 'umap/img/osm.svg' %}"
+           alt=""
+           width="128px"
+           height="128px" />
+      <p>
+        {% blocktrans with osm_url="http://osm.org" %}uMap lets you create maps with <a href="{{ osm_url }}" />OpenStreetMap</a> layers in a minute and embed them in your site.{% endblocktrans %}
+      </p>
+    </div>
+    <div class="col umap-features-list half mwide">
+      <img class="colophon"
+           src="{% static 'umap/img/edit.svg' %}"
+           alt=""
+           width="128px"
+           height="128px" />
+      <ul>
+        <li>
+          {% trans "Choose the layers of your map" %}
+        </li>
+        <li>
+          {% trans "Add POIs: markers, lines, polygons..." %}
+        </li>
+        <li>
+          {% trans "Manage POIs colours and icons" %}
+        </li>
+        <li>
+          {% trans "Manage map options: display a minimap, locate user on load…" %}
+        </li>
+        <li>
+          {% trans "Batch import geostructured data (geojson, gpx, kml, osm...)" %}
+        </li>
+        <li>
+          {% trans "Choose the license for your data" %}
+        </li>
+        <li>
+          {% trans "Embed and share your map" %}
+        </li>
+      </ul>
+    </div>
+    <div class="col quarter mwide">
+      <img class="colophon"
+           src="{% static 'umap/img/opensource.svg' %}"
+           alt=""
+           width="128px"
+           height="128px" />
+      <p class="note">
+        {% blocktrans with repo_url="https://github.com/umap-project/umap" %}And it's <a href="{{ repo_url }}">open source</a>!{% endblocktrans %}
+      </p>
+    </div>
+  </div>
+</div>
+<div class="wrapper">
+  <div class="row">
+    <div class="col half center mwide">
+      {% spaceless %}
+        <div class="button-bar {% if demo_map %}half{% endif %}">
+          {% if not UMAP_READONLY and  user.is_authenticated %}
+            <a href="{% url 'map_new' %}" class="button button-primary">{% trans "Create a map" %}</a>
+          {% endif %}
+          {% if demo_map %}
+            <a href="{{ demo_map.get_absolute_url }}" class="button neutral">{% trans "Play with the demo" %}</a>
+          {% endif %}
+        </div>
+      {% endspaceless %}
+    </div>
+  </div>
+</div>

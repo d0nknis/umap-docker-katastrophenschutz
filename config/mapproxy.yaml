@@ -1,0 +1,183 @@
+services:
+  wmts: {}
+  tms: {}
+  wms: {}
+
+layers:
+  - name: topplus
+    title: "TopPlusOpen"
+    sources: [topplus_cache]
+  - name: topplus_grau
+    title: "TopPlusOpen Grau"
+    sources: [topplus-grau_cache]
+  - name: opentopomap
+    title: "OpenTopoMap"
+    sources: [opentopomap_cache]
+  - name: openstreetmap
+    title: "OpenStreetMap"
+    sources: [openstreetmap_cache]
+  - name: oepnv
+    title: "ÖPNV Karte"
+    sources: [oepnv_cache]
+  - name: positron
+    title: "Positron (CartoDB Light)"
+    sources: [positron_cache]
+  - name: dtk25
+    title: "DTK25"
+    sources: [dtk25_cache]
+  - name: dop_rgb
+    title: "DOP RGB (20cm)"
+    sources: [dop_rgb_cache]
+  - name: dop_ir
+    title: "DOP Infrarot (20cm)"
+    sources: [dop_ir_cache]
+  - name: dop_grau
+    title: "DOP Graustufen (20cm)"
+    sources: [dop_grau_cache]
+
+caches:
+  topplus_cache:
+    sources: [topplus_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/topplus
+
+  topplus-grau_cache:
+    sources: [topplus-grau_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/topplus-grau
+
+  opentopomap_cache:
+    sources: [opentopomap_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/opentopomap
+
+  openstreetmap_cache:
+    sources: [openstreetmap_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/openstreetmap
+
+  oepnv_cache:
+    sources: [oepnv_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/oepnv
+
+  positron_cache:
+    sources: [positron_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/positron
+
+  dtk25_cache:
+    sources: [dtk25_src]
+    grids: [webmercator]
+    format: image/png
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/dtk25
+
+  dop_rgb_cache:
+    sources: [dop_rgb_src]
+    grids: [webmercator]
+    format: image/jpeg
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/dop_rgb
+
+  dop_ir_cache:
+    sources: [dop_ir_src]
+    grids: [webmercator]
+    format: image/jpeg
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/dop_ir
+
+  dop_grau_cache:
+    sources: [dop_grau_src]
+    grids: [webmercator]
+    format: image/jpeg
+    cache:
+      type: file
+      directory: /var/cache/mapproxy/dop_grau
+
+sources:
+  topplus_src:
+    type: tile
+    url: "http://sgx.geodatenzentrum.de/wmts_topplus_open/tile/1.0.0/web/default/WEBMERCATOR/%(z)s/%(x)s/%(y)s.png"
+    grid: webmercator
+  topplus-grau_src:
+    type: tile
+    url: "https://sgx.geodatenzentrum.de/wmts_topplus_open/tile/1.0.0/web_grau/default/WEBMERCATOR/%(z)s/%(x)s/%(y)s.png"
+    grid: webmercator
+  opentopomap_src:
+    type: tile
+    url: "https://tile.opentopomap.org/%(z)s/%(x)s/%(y)s.png"
+    grid: webmercator
+  openstreetmap_src:
+    type: tile
+    url: "https://tile.openstreetmap.de/%(z)s/%(x)s/%(y)s.png"
+    grid: webmercator
+  oepnv_src:
+    type: tile
+    url: "https://tile.memomaps.de/tilegen/%(z)s/%(x)s/%(y)s.png"
+    grid: webmercator
+  positron_src:
+    type: tile
+    url: "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/%(z)s/%(x)s/%(y)s.png"
+    grid: webmercator
+  dtk25_src:
+    type: wms
+    req:
+      url: "https://sgx.geodatenzentrum.de/wms_dtk25?SERVICE=WMS&"
+      layers: "dtk25"
+      transparent: false
+      version: "1.3.0"
+    supported_srs: ["EPSG:3857","EPSG:25832"]
+  dop_rgb_src:
+    type: wms
+    req:
+      url: "https://sg.geodatenzentrum.de/wms_dop?SERVICE=WMS&"
+      layers: "rgb"
+      transparent: false
+      version: "1.3.0"
+    supported_srs: ["EPSG:3857","EPSG:25832","EPSG:25833"]
+  dop_ir_src:
+    type: wms
+    req:
+      url: "https://sg.geodatenzentrum.de/wms_dop?SERVICE=WMS&"
+      layers: "ir"
+      transparent: false
+      version: "1.3.0"
+    supported_srs: ["EPSG:3857","EPSG:25832","EPSG:25833"]
+  dop_grau_src:
+    type: wms
+    req:
+      url: "https://sg.geodatenzentrum.de/wms_dop?SERVICE=WMS&"
+      layers: "bild_grau"
+      transparent: false
+      version: "1.3.0"
+    supported_srs: ["EPSG:3857","EPSG:25832","EPSG:25833"]
+
+grids:
+  webmercator:
+    base: GLOBAL_WEBMERCATOR
+
+globals:
+  cache:
+    base_dir: /var/cache/mapproxy

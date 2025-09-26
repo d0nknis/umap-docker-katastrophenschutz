@@ -1,0 +1,9 @@
+_ROH
+static/
+kats/
+Taktische-Zeichen/
+.env
+config/umap.conf
+config/mapproxy-seed.yaml
+
+docker-compose.*.yml

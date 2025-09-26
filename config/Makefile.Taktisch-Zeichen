@@ -1,0 +1,163 @@
+# ==========================
+# Konfiguration & Discovery
+# ==========================
+SHELL := /bin/bash
+
+# Alle Jinja2-Templates
+SOURCES := $(shell find symbols -type f -name '*.j2' | LC_ALL=C sort)
+TEMPLATE := $(shell find symbols -type f -name '*.j2t' 2>/dev/null)
+
+# Hilfsfunktion: Ein einzelner relativer Pfad (ohne "symbols/") wird "bereinigt".
+# - Leerzeichen zu _
+# - Umlaute äöüÄÖÜß -> ae/oe/ue/Ae/Oe/Ue/ss
+# - alle übrigen Nicht-[A-Za-z0-9./-] -> _
+sanitize = $(shell printf '%s' "$(1)" \
+	| sed -e 's/ /_/g' \
+	      -e 's/ä/ae/g; s/ö/oe/g; s/ü/ue/g; s/Ä/Ae/g; s/Ö/Oe/g; s/Ü/Ue/g; s/ß/ss/g' \
+	      -e 's/[^A-Za-z0-9.\/-]/_/g' )
+
+# Aus jedem Source machen wir (relativ) und "bereinigt" eine Ziel-Basis
+REL_FROM_SRC = $(patsubst symbols/%,%,$(1))
+SAFE_FROM_REL = $(call sanitize,$(1))
+
+# Listen der Ausgabedateien
+SVG_FILES          :=
+SVG_PRINT_FILES    :=
+PNG_1024_FILES     :=
+PNG_512_FILES      :=
+PNG_256_FILES      :=
+PNG_PRINT_1024_FILES :=
+PNG_PRINT_512_FILES  :=
+PNG_PRINT_256_FILES  :=
+STICKERS           :=
+
+# ==========================
+# Symlink-Fix für includes
+# ==========================
+# Falls dein j2 kein -I . unterstützt UND die Templates "{% include './fonts/fonts.j2' %}" verwenden,
+# legen wir rekursiv pro symbols-Unterordner einen Symlink "fonts" -> ../../fonts etc. an.
+.PHONY: symlinks
+symlinks:
+	@set -e; \
+	if [ -d fonts ]; then \
+	  find symbols -type d -print0 | while IFS= read -r -d '' d; do \
+	    rel=$$(realpath --relative-to="$$d" fonts); \
+	    ln -sfn "$$rel" "$$d/fonts"; \
+	  done; \
+	fi
+
+# =============
+# Regel-Generator
+# =============
+# Für jede Quelle generieren wir explizite Regeln:
+#   build/svg/<safe>.svg             : symbols/<rel>.j2
+#   build/print/svg/<safe>.svg       : symbols/<rel>.j2
+#   build/png/{1024,512,256}/<safe>.png        : build/svg/<safe>.svg
+#   build/print/png/{1024,512,256}/<safe>.png  : build/print/svg/<safe>.svg
+#   build/sticker/<safe>.png         : build/png/512/<safe>.png
+define GEN_RULES
+# Variablen für diese eine Quelle
+rel_$(1) := $(call REL_FROM_SRC,$(1))
+safe_$(1) := $(call SAFE_FROM_REL,$(call REL_FROM_SRC,$(1)))
+
+# SVG default
+build/svg/$$(safe_$(1):.j2=.svg): symbols/$$(rel_$(1)) $(TEMPLATE) | symlinks
+	@mkdir -p $$(@D)
+	j2 $$< themes/default.json -o $$@
+
+# SVG print
+build/print/svg/$$(safe_$(1):.j2=.svg): symbols/$$(rel_$(1)) $(TEMPLATE) | symlinks
+	@mkdir -p $$(@D)
+	j2 $$< themes/print.json -o $$@
+
+# PNG default
+build/png/1024/$$(safe_$(1):.j2=.png): build/svg/$$(safe_$(1):.j2=.svg)
+	@mkdir -p $$(@D)
+	unshare --user inkscape -w 1024 -h 1024 $$^ -o $$@ >/dev/null
+	optipng $$@
+
+build/png/512/$$(safe_$(1):.j2=.png): build/svg/$$(safe_$(1):.j2=.svg)
+	@mkdir -p $$(@D)
+	unshare --user inkscape -w 512 -h 512 $$^ -o $$@ >/dev/null
+	optipng $$@
+
+build/png/256/$$(safe_$(1):.j2=.png): build/svg/$$(safe_$(1):.j2=.svg)
+	@mkdir -p $$(@D)
+	unshare --user inkscape -w 256 -h 256 $$^ -o $$@ >/dev/null
+	optipng $$@
+
+# PNG print
+build/print/png/1024/$$(safe_$(1):.j2=.png): build/print/svg/$$(safe_$(1):.j2=.svg)
+	@mkdir -p $$(@D)
+	unshare --user inkscape -w 1024 -h 1024 $$^ -o $$@ >/dev/null
+	optipng $$@
+
+build/print/png/512/$$(safe_$(1):.j2=.png): build/print/svg/$$(safe_$(1):.j2=.svg)
+	@mkdir -p $$(@D)
+	unshare --user inkscape -w 512 -h 512 $$^ -o $$@ >/dev/null
+	optipng $$@
+
+build/print/png/256/$$(safe_$(1):.j2=.png): build/print/svg/$$(safe_$(1):.j2=.svg)
+	@mkdir -p $$(@D)
+	unshare --user inkscape -w 256 -h 256 $$^ -o $$@ >/dev/null
+	optipng $$@
+
+# Sticker (aus 512px PNG)
+build/sticker/$$(safe_$(1):.j2=.png): build/png/512/$$(safe_$(1):.j2=.png)
+	@mkdir -p $$(@D)
+	convert $$^ -bordercolor none -background white -alpha background -channel A -blur 20 -level 0,0%% $$@
+
+# Sammellisten füllen
+SVG_FILES += build/svg/$$(safe_$(1):.j2=.svg)
+SVG_PRINT_FILES += build/print/svg/$$(safe_$(1):.j2=.svg)
+PNG_1024_FILES += build/png/1024/$$(safe_$(1):.j2=.png)
+PNG_512_FILES  += build/png/512/$$(safe_$(1):.j2=.png)
+PNG_256_FILES  += build/png/256/$$(safe_$(1):.j2=.png)
+PNG_PRINT_1024_FILES += build/print/png/1024/$$(safe_$(1):.j2=.png)
+PNG_PRINT_512_FILES  += build/print/png/512/$$(safe_$(1):.j2=.png)
+PNG_PRINT_256_FILES  += build/print/png/256/$$(safe_$(1):.j2=.png)
+STICKERS += build/sticker/$$(safe_$(1):.j2=.png)
+endef
+
+# Alle Regeln generieren
+$(foreach s,$(SOURCES),$(eval $(call GEN_RULES,$(s))))
+
+# ==========
+# Phony-Targets
+# ==========
+.PHONY: all svg print png png_print stickers clean release ci web list
+
+svg: $(SVG_FILES)
+print: $(SVG_PRINT_FILES)
+png: $(PNG_1024_FILES) $(PNG_512_FILES) $(PNG_256_FILES)
+png_print: $(PNG_PRINT_1024_FILES) $(PNG_PRINT_512_FILES) $(PNG_PRINT_256_FILES)
+stickers: $(STICKERS)
+
+all: svg print png png_print
+
+clean:
+	rm -rf build
+	rm -f Taktische-Zeichen.zip release.zip
+
+release: all
+	cd build && zip -r ../Taktische-Zeichen.zip ./*
+
+ci: all
+	cd build && zip -r ../release.zip ./*
+
+web: all
+	mkdir -p ./web/build
+	cp -r ./build/ ./web/
+	find build -type f -name '*.svg' | LC_ALL=C sort > ./web/symbols.lst
+
+# Nützlich: Übersicht Quelle -> Ziel (bereinigt) anzeigen
+list:
+	@echo "Quelle -> Ziel (bereinigt):"; \
+	for s in $(SOURCES); do \
+	  rel=$${s#symbols/}; \
+	  safe=$$(printf '%s' "$$rel" \
+	    | sed -e 's/ /_/g' \
+	          -e 's/ä/ae/g; s/ö/oe/g; s/ü/ue/g; s/Ä/Ae/g; s/Ö/Oe/g; s/Ü/Ue/g; s/ß/ss/g' \
+	          -e 's/[^A-Za-z0-9.\/-]/_/g'); \
+	  echo "$$rel -> $$safe"; \
+	done
