@@ -7,7 +7,7 @@ NC='\033[0m' # No Color
 # 1. Prüfen, ob Taktische-Zeichen vorhanden ist
 if [ ! -d "kats/pictograms" ]; then
     if [ ! -d "Taktische-Zeichen" ]; then
-        echo -e "${GREEN}Das Verzeichnis _ROH/Taktische-Zeichen existiert nicht.${NC}"
+        echo -e "${GREEN}Das Verzeichnis Taktische-Zeichen existiert nicht.${NC}"
         read -p "Soll das Repository 'Taktische-Zeichen' von GitHub geklont werden? [j/N] " clone_tz
         if [[ "$clone_tz" =~ ^([jJ]|[yY])$ ]]; then
             git clone https://github.com/jonas-koeritz/Taktische-Zeichen.git Taktische-Zeichen
@@ -19,8 +19,7 @@ if [ ! -d "kats/pictograms" ]; then
         echo -e "${GREEN}Taktische-Zeichen ist bereits vorhanden.${NC}"
     fi
     if [ -d "Taktische-Zeichen" ]; then
-        echo -e "${RED}Taktische-Zeichen ist nicht vorhanden. Abbruch!${NC}"
-        echo -e "${GREEN} Erstelle Taktische-Zeichen für die Pictoramme ${NC}"
+        echo -e "${GREEN}Erstelle Taktische-Zeichen für die Pictoramme ${NC}"
         cd Taktische-Zeichen
         rm Makefile
         ln -s ../config/Makefile.Taktisch-Zeichen Makefile
@@ -59,7 +58,7 @@ if [ ! -f ".env" ]; then
 ALLOWED_HOSTS=$DOMAIN
 SECRET_KEY=$SECRET_KEY
 OPENROUTESERVICE_APIKEY="$OPENROUTESERVICE_APIKEY"
-SITE_URL=https://$DOMAIN/
+SITE_URL=https://$DOMAIN
 UMAP_ALLOW_ANONYMOUS=$UMAP_ALLOW_ANONYMOUS
 DEBUG=$DEBUG
 
@@ -74,15 +73,14 @@ else
 fi
 
 # 3. Abfragen für umap.conf
-read -p "Name für UMAP_HOST_INFOS (name) [THW OV]: " UMAP_NAME
-UMAP_NAME=${UMAP_NAME:-THW OV}
-read -p "URL für UMAP_HOST_INFOS (url) [https://www.thw.de/]: " UMAP_URL
-UMAP_URL=${UMAP_URL:-https://www.thw.de/}
-read -p "Kontakt für UMAP_HOST_INFOS (contact) [changeme@example.de]: " UMAP_CONTACT
-UMAP_CONTACT=${UMAP_CONTACT:-changeme@example.de}
-
 echo -e "${GREEN}Prüfe auf config/umap.conf...${NC}"
 if [ ! -f "config/umap.conf" ]; then
+    read -p "Name für UMAP_HOST_INFOS (name) [THW OV]: " UMAP_NAME
+    UMAP_NAME=${UMAP_NAME:-THW OV}
+    read -p "URL für UMAP_HOST_INFOS (url) [https://www.thw.de/]: " UMAP_URL
+    UMAP_URL=${UMAP_URL:-https://www.thw.de/}
+    read -p "Kontakt für UMAP_HOST_INFOS (contact) [changeme@example.de]: " UMAP_CONTACT
+    UMAP_CONTACT=${UMAP_CONTACT:-changeme@example.de}
     echo -e "${GREEN}Erstelle config/umap.conf aus Beispiel...${NC}"
     cp config/umap.conf.example config/umap.conf
     # Werte ersetzen
@@ -93,7 +91,7 @@ else
     echo -e "${GREEN}config/umap.conf ist bereits vorhanden.${NC}"
 fi
 
-echo -e "${GREEN} docker wird gestartet${NC}"
-docker compose up -d   --remove-orphans
-echo -e "${GREEN} Erstelle Superuser für uMap...${NC}"
+echo -e "${GREEN}docker wird gestartet${NC}"
+docker compose up -d --remove-orphans
+echo -e "${GREEN}Erstelle Superuser für uMap...${NC}"
 docker compose exec app umap createsuperuser
