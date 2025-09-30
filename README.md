@@ -1,3 +1,6 @@
+# Vorsicht
+> **ACHTUNG:** Zurzeit funktioniert dieses Projekt nur auf x86/x86_64-Systemen (Intel/AMD). ARM-Architekturen (z. B. Raspberry Pi) werden derzeit nicht unterstützt.
+
 # uMap THW-OSST
 
 uMap-Instanz für das THW OV OSST mit MapProxy, Nginx, Redis und PostGIS/PostgreSQL als Docker-Setup.
