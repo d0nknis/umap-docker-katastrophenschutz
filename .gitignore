@@ -2,6 +2,7 @@ _ROH
 static/
 kats/
 Taktische-Zeichen/
+Taktische-Zeichen/*
 .env
 config/umap.conf
 config/mapproxy-seed.yaml

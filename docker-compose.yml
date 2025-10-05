@@ -77,6 +77,7 @@ services:
     volumes:
       - ./userdata:/srv/umap/uploads
       - ./template_custom:/srv/umap/templates_custom
+      - static:/srv/umap/static:rw
       - ./kats/:/srv/umap/kats
       - ./config/umap.conf:/etc/umap/umap.conf
     labels:
@@ -92,7 +93,7 @@ services:
   nginx_static:
     image: nginx:alpine
     volumes:
-      - ./static:/srv/static_core:ro
+      - static:/srv/static_core:ro
       - ./static_custom:/srv/static_custom:ro
       - ./config/nginx-static.conf:/etc/nginx/conf.d/default.conf
       - ./log:/var/log/nginx/
@@ -125,3 +126,5 @@ services:
       - traefik.http.routers.umap-mapproxy.tls.certresolver=letsencrypt
       - traefik.http.routers.umap-mapproxy.service=umap-mapproxy
       - traefik.http.services.umap-mapproxy.loadbalancer.server.port=8080
+volumes:
+  static:
