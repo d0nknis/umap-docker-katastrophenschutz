@@ -1,0 +1,193 @@
+/*
+ * vars.css
+ */
+ :root {
+    /* Colors. */
+    --color-darkBlue: radial-gradient(#0077B6 0%, #003399 100%);
+    --color-gray-skew: #53616B;
+    --color-thw-dark: #2D2C2F;
+    --color-thw-blue: rgb(0, 51, 153);
+    --color-thw-lightblue: rgb(0, 119, 182);
+    --color-thw-yellow: rgb(255, 204, 0);
+    --color-thw-darkyellow: rgb(204, 153, 0);
+    --color-thw-darkblue: rgb(0, 51, 102);
+    --color-thw-darklightblue: rgb(0, 85, 128);
+
+    --background-color: var(--color-thw-dark);
+}
+
+/*
+ * content.css
+ */
+body.content {
+   background-color: var(--background-color);
+}
+header {
+    margin-top: 0;
+    padding-right: 10px;
+    color:var(--color-lightGray);
+}
+.row {
+    background-color: #53616B;
+    color: var(--color-lightGray)
+}
+h2.tabs {
+    padding-left: 5px;
+}
+
+/* **************************** */
+/*            colors            */
+/* **************************** */
+.button {
+    background-color: initial;
+    color: var(--button-primary-color);
+}
+/* **************** */
+/*    Login icons   */
+/* **************** */
+body.login {
+    min-width:  320px;
+    width:35%;
+    background-color: var(--background-color);
+    color: var(--color-lightGray);
+}
+/* **************************** */
+/*            home              */
+/* **************************** */
+.highlights {
+    color: var(--color-light);
+}
+/* **************************** */
+/*           Dashboard          */
+/* **************************** */
+.table-wrapper {
+    overflow-x: initial;
+}
+.table-wrapper table tbody tr:nth-child(odd) {
+    background-color: #f4f4f48a;
+    color: var(--color-darkGray);
+}
+
+/*
+ * nav.css
+ */
+footer {
+   background-color: initial;
+   background: var(--color-darkBlue);
+}
+footer a.branding,.umap-nav h1 a:not(.button) {
+    background-image: initial;
+    background-position: initial;
+    background-repeat: initial;
+    background-size: initial;
+}
+.umap-nav h1 img,  footer a.branding img,.home-button img {
+    filter: brightness(0) invert(1);
+}
+.home-button:hover img {
+    filter: none;
+}
+.home-button:hover {
+    background-color: var(--color-lighterGray);
+}
+.umap-nav h1 a:not(.button) {
+   font-size: 1.5rem;
+}
+.umap-nav,header {
+    background: var(--color-darkBlue);
+}
+/*
+ * css/form.css
+ */
+select {
+   background-color: var(--color-light);
+}
+.button,
+[type="button"],
+input[type="submit"] {
+   border: 3px solid;
+   border-color: white;
+   padding: 3px;
+
+}
+button.flat, [type="button"].flat, .dark [type="button"].flat {
+    color: var(--color-lightGray);
+}
+details summary,.umap-browser .datalayer summary {
+    background-color: var(--color-darkGray);
+    color: var(--color-lightGray);
+}
+.umap-pictogram-choice img {
+    max-width: 50px;
+}
+.umap-pictogram-grid {
+    grid-template-columns: repeat(auto-fill, 50px);
+    grid-gap: 5px;
+}
+.umap-multiplechoice input[type='radio']:checked+label {
+    background-color: var(--color-thw-lightblue);
+    color: var(--color-lightGray);
+}
+.dark input.switch:checked~label:before {
+    background-color: var(--color-thw-lightblue);
+    color: var(--color-lightGray);
+}
+.umap-pictogram-choice {
+    width: 50px;
+    height: 50px;
+}
+/*
+ * bar.css
+ */
+.umap-main-edit-toolbox .logo a {
+    background-image: url('img/logo-thw_min.svg');
+    filter: brightness(0) invert(1);
+}
+.leaflet-container .connected-peers, .dark [type=button].connected-peers:hover {
+    background-color: var(--color-thw-lightblue);
+}
+/*
+ * panel.css
+ */
+.panel,.panel .body {
+    color: var(--color-lightGray);
+}
+.panel.dark details[open] {
+    border-left: 2px solid var(--color-thw-darkyellow);
+}
+/*
+ * popup.css
+ */
+.umap-popup-content tr:nth-child(odd) {
+    color: var(--color-darkGray);
+}
+/*
+ * icon.css
+ */
+
+button.icon {
+    filter: brightness(0) invert(1);
+}
+
+/*
+ * map.css
+ */
+ .rules-caption .color-box img {
+    width: 19px;
+ }
+ .umap-caption .header {
+    background-color: var(--color-gray-skew);
+    color: var(--color-lightGray);
+ }
+ .caption-item strong button {
+    background-color: initial;
+ }
+ .umap-caption .dates {
+    color: var(--color-lightGray);
+ }
+ .umap-browser .datalayer li:nth-child(even) {
+    background-color: var(--color-mediumGray);
+}
+.umap-browser .datalayer .feature-color img {
+    filter: initial !important;
+}

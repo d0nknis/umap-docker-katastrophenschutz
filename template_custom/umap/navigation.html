@@ -19,6 +19,11 @@
         <li>
           <a href="{{ UMAP_HELP_URL }}">{% trans "Help" %}</a>
         </li>
+        {% if user.is_superuser %}
+        <li>
+          <a href="/admin ">Admin</a>
+        </li>
+        {% endif %}
       {% else %}
         <li>
           <a href="{% url "login" %}" class="login">{% trans "Log in" %} / {% trans "Sign in" %}</a>

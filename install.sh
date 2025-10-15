@@ -4,6 +4,7 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+chmod -R 777 template_custom
 # 1. Prüfen, ob Taktische-Zeichen vorhanden ist
 if [ ! -d "kats/pictograms" ]; then
     if [ ! -d "Taktische-Zeichen" ]; then
@@ -91,6 +92,12 @@ else
     echo -e "${GREEN}config/umap.conf ist bereits vorhanden.${NC}"
 fi
 
+cd static_custom/umap/img
+wget "https://www.thw.de/SiteGlobals/Frontend/Images/logo-adler.svg?__blob=normal&v=2" -O logo-adler.svg
+wget "https://www.thw.de/SiteGlobals/Frontend/Images/logo-thw.svg?__blob=normal&v=2" -O logo-thw.svg
+wget "https://www.thw.de/SiteGlobals/Frontend/Images/favicon.ico?__blob=normal&v=2" -O favicon.ico
+wget "https://www.thw.de/SiteGlobals/Frontend/Images/logo-thw_min.svg?__blob=normal&v=2" -O logo-thw_min.svg
+cd ../../..
 echo -e "${GREEN}docker wird gestartet${NC}"
 docker compose up -d --remove-orphans
 echo -e "${GREEN}Erstelle Superuser für uMap...${NC}"

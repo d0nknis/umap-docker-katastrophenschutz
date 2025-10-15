@@ -1,10 +1,14 @@
 _ROH
-static/
+static
 kats/
 Taktische-Zeichen/
 Taktische-Zeichen/*
 .env
 config/umap.conf
 config/mapproxy-seed.yaml
-
 docker-compose.*.yml
+static_custom/umap/img/home.svg
+static_custom/umap/img/logo-adler.svg
+static_custom/umap/img/logo-thw_min.png
+static_custom/umap/img/logo-thw_min.svg
+static_custom/umap/img/logo-thw.svg

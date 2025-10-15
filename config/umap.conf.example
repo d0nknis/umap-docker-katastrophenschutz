@@ -6,3 +6,5 @@ UMAP_HOST_INFOS = {
     "url": "https://www.thw.de/",
     "contact": "changeme@example.de"
 }
+
+UMAP_CUSTOM_TEMPLATES = "/srv/umap/templates_custom"

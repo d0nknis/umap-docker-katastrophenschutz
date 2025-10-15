@@ -1,10 +1,13 @@
-{% load i18n %}
-
+{% load umap_tags i18n static %}
 <footer>
-  <a href="{% url "home" %}" class="branding">uMap</a>
+  <a href="{% url "home" %}" class="branding">
+    <img src="{% static 'umap/img/logo-thw_min.svg' %}" alt="Logo THW" style="height: 40px; vertical-align: middle; margin-right: 10px;">
+    E-Karte</a>
   <span>{% trans "An OpenStreetMap project" %}
   ({% trans "version" %} <a href="https://docs.umap-project.org/en/stable/changelog/">{{ UMAP_VERSION }}</a>)</span>
-  {% if UMAP_HOST_INFOS.url and UMAP_HOST_INFOS.name %}<span>{% trans "Hosted by" %} <a href="{{ UMAP_HOST_INFOS.url }}">{{ UMAP_HOST_INFOS.name }}</a></span>{% endif %}
+  {% if UMAP_HOST_INFOS.url and UMAP_HOST_INFOS.name %}<span>{% trans "Hosted by" %} <a href="{{ UMAP_HOST_INFOS.url }}">{{ UMAP_HOST_INFOS.name }}</a><br>
+        <a href="{{ UMAP_HOST_INFOS.url }}service/impressum">Impressum</a><br>
+        <a href="{{ UMAP_HOST_INFOS.url }}service/datenschutz">Datenschutz</a></span>{% endif %}
   {% if UMAP_HOST_INFOS.email %}<a href="mailto:{{ UMAP_HOST_INFOS.email }}">{% trans "Contact" %}</a>{% endif %}
   {% if UMAP_HELP_URL and user.is_authenticated %}<a href="{{ UMAP_HELP_URL }}">{% trans "Help" %}</a>{% endif %}
   {% get_language_info_list for LANGUAGES as languages %}
